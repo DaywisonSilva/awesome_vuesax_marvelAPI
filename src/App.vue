@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <img alt="Vue logo" :src="img">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
@@ -10,8 +10,20 @@ import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      img: ''
+    }
+  },
   components: {
     HelloWorld
+  },
+  mounted() {
+    this.$axios.get("/characters").then(async ({data: res}) => {
+      console.log(res.data.results)
+      this.img = res.data.results[0].thumbnail.path + '/portrait_xlarge.jpg'
+
+    })
   }
 }
 </script>

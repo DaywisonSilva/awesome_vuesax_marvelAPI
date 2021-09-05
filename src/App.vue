@@ -1,40 +1,59 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" :src="img">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="app__row">
+      <app-card
+        :info-card="info"
+        v-for="(info, key) in data"
+        :key="key"
+        class="app__card"
+      ></app-card>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
+  components: {
+    appCard: () => import('@/components/Card.vue'),
+  },
   data() {
     return {
-      img: ''
+      img: '',
+      value1: '',
+      data: [],
     }
   },
-  components: {
-    HelloWorld
-  },
   mounted() {
-    this.$axios.get("/characters").then(async ({data: res}) => {
-      console.log(res.data.results)
-      this.img = res.data.results[0].thumbnail.path + '/portrait_xlarge.jpg'
-
+    let loadingData = this.$vs.loading({
+      type: 'circles',
+      text: 'Carregando',
+      color: '#990000'
     })
-  }
+    this.$axios.get('/characters').then(({ data: res }) => {
+      console.log(res.data.results)
+      res.data.results.forEach((obj) => this.data.push(obj))
+      this.img = res.data.results[0].thumbnail.path + '/portrait_xlarge.jpg'
+      loadingData.close();
+    })
+    this.$vs.setTheme('dark')
+    
+  },
 }
 </script>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+  #app {
+    padding: 30px 0;
+  }
+
+  .app__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .app__card {
+    margin: 20px 0;
+  }
 </style>

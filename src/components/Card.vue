@@ -18,7 +18,7 @@
       <vs-button class="btn-chat" shadow primary>
         <i class='bx bx-chat' ></i>
         <span class="span">
-          54
+          {{infoCard.name}}
         </span>
       </vs-button>
     </template>
